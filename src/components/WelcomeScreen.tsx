@@ -1,23 +1,35 @@
 import React from 'react';
 import {View, Image, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation,useRoute} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const WelcomeScreen = () => {
   const navigation = useNavigation();
+  const route = useRoute();
+  const { userName } = route.params || {};
+  console.log("username++++",userName)
+
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.removeItem('userName');
+      console.log('User logged-out');
+      navigation.navigate('SignIn');
+    } catch (error) {
+      console.error('Error while logout:', error);
+    }
+  };
   return (
     <View style={[styles.mainContainer]}>
       <View style={[styles.LogoContainer]}>
         <Image
-          source={require('../../assets/images/Logo.png')}
+          source={require('../../src/assets/images/Logo.png')}
           style={styles.image}
         />
         <View style={[styles.usernameContainer]}>
-          <Text style={[styles.usernameText]}>Amit Rathod</Text>
+          <Text style={[styles.usernameText]}> {userName ? userName : 'Guest'}</Text>
         </View>
       </View>
-      <TouchableOpacity style={styles.welcomeButton}  onPress={() => {
-              navigation.navigate('SignIn');
-            }}>
+      <TouchableOpacity style={styles.welcomeButton} onPress={handleLogout}>
         <Text style={[styles.welcomeBtnText]}>Logout</Text>
       </TouchableOpacity>
     </View>

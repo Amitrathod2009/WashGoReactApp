@@ -14,6 +14,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SignUp = () => {
   const [check, setCheck] = useState(false);
@@ -59,6 +60,8 @@ const SignUp = () => {
 
       if (response.status === 200) {
         console.log('Registration successful:', response.data);
+        await AsyncStorage.setItem('userName', name);
+        
         setPhone('');
         setName('');
         setPassword('');
@@ -67,7 +70,7 @@ const SignUp = () => {
         navigation.navigate('SignIn');
       } else {
         console.error('Registration failed:', response.data);
-        setErrorMessageRef('Registration failed. Please try again.');
+        setErrorMessageRef('Registration failed.');
       }
     } catch (error) {
       console.error('API Error:', error);
@@ -77,12 +80,12 @@ const SignUp = () => {
   return (
     <ScrollView style={[styles.mainContainer]}>
       <Image
-        source={require('../../assets/images/SignUpBottomRight.png')}
+        source={require('../../src/assets/images/SignUpBottomRight.png')}
         style={styles.bottomRightAbsImg}
       />
       <View style={[styles.LogoContainer]}>
         <Image
-          source={require('../../assets/images/Logo.png')}
+          source={require('../../src/assets/images/Logo.png')}
           style={styles.logoStyle}
         />
       </View>

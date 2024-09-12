@@ -5,19 +5,19 @@ const SplashScreen = () => {
   return (
     <ScrollView contentContainerStyle={[styles.mainContainer]}>
       <Image
-          source={require('../../assets/images/WelcomeTopLeft.png')}
+          source={require('../../src/assets/images/WelcomeTopLeft.png')}
           style={styles.WelcomeTopLeftImg}
         />
         <Image
-          source={require('../../assets/images/WelcomeTopRight.png')}
+          source={require('../../src/assets/images/WelcomeTopRight.png')}
           style={styles.WelcomeTopRightImg}
         />
       <Image
-          source={require('../../assets/images/LargeLogo.png')}
+          source={require('../../src/assets/images/LargeLogo.png')}
           style={styles.LogoStyles}
         />
            <Image
-          source={require('../../assets/images/LogoBottomRight.png')}
+          source={require('../../src/assets/images/LogoBottomRight.png')}
           style={styles.bottomRightAbsImg}
         />
     </ScrollView>

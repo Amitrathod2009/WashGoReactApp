@@ -9,16 +9,16 @@ const StartScreen = () => {
   return (
     <ScrollView contentContainerStyle={[styles.mainContainer]}>
        <Image
-          source={require('../../assets/images/WelcomeTopLeft.png')}
+          source={require('../../src/assets/images/WelcomeTopLeft.png')}
           style={styles.WelcomeTopLeftImg}
         />
         <Image
-          source={require('../../assets/images/WelcomeTopRight.png')}
+          source={require('../../src/assets/images/WelcomeTopRight.png')}
           style={styles.WelcomeTopRightImg}
         />
       <View style={[styles.LogoContainer]}>
         <Image
-          source={require('../../assets/images/LargeLogo.png')}
+          source={require('../../src/assets/images/LargeLogo.png')}
           style={styles.LogoStyles}
         />
         <View style={[styles.usernameContainer]}>
@@ -27,14 +27,16 @@ const StartScreen = () => {
         </View>
       </View>
       <TouchableOpacity style={styles.welcomeButton}  onPress={() => {
-                navigation.navigate('SignIn');
+                navigation.navigate('SignUp');
               }}>
         <Text style={[styles.welcomeBtnText]}>Let’s Start</Text>
       </TouchableOpacity>
       <Text style={[styles.haveAccText]}>
           Àlready have an account?
           {
-            <TouchableOpacity style={[styles.signUpLink]}>
+            <TouchableOpacity style={[styles.signUpLink]}  onPress={() => {
+              navigation.navigate('SignIn');
+            }}>
               <Text style={[styles.signUpLinkText]}>Sign in</Text>
             </TouchableOpacity>
           }

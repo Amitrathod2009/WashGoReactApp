@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -11,8 +11,9 @@ import {
 } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SignIn = () => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
@@ -21,7 +22,7 @@ const SignIn = () => {
   const [errorMessageRef, setErrorMessageRef] = useState('');
 
   const navigation = useNavigation();
-  
+
   const validateFields = () => {
     if (!phone || !password) {
       setErrorMessageRef('Please fill in all required fields.');
@@ -55,17 +56,30 @@ const SignIn = () => {
 
       if (response.status === 200) {
         console.log('Login successful:', response.data);
-        navigation.navigate('WelcomeScreen');
-        setPhone('');
-        setPassword('');
-        setErrorMessageRef('');
+        
+        const userName = await AsyncStorage.getItem('userName');
+        if (userName) {
+          await AsyncStorage.setItem('userName', userName);
+          console.log('UserName here:', userName);
+
+          console.log("TOKEN===>",response.data.token)
+         navigation.navigate('WelcomeScreen', { userName });
+         
+         setPhone('');
+         setPassword('');
+         setErrorMessageRef('');
+        } else {
+          console.error('Username not found in response');
+          setErrorMessageRef('Username not found.');
+        }
+  
       } else {
         console.error('Login failed:', response.data);
         setErrorMessageRef('')
       }
     } catch (error) {
       console.error('API Error:', error);
-      setErrorMessageRef('An error occurred. Please try again.');
+      setErrorMessageRef('Error, ');
     }
   };
   const onGoogleIconPress = () => {
@@ -78,12 +92,12 @@ const SignIn = () => {
   return (
     <ScrollView style={[styles.mainContainer]}>
       <Image
-        source={require('../../assets/images/SignInBottomLeft.png')}
+        source={require('../../src/assets/images/SignInBottomLeft.png')}
         style={styles.bottomLeftAbsImg}
       />
       <View style={[styles.LogoContainer]}>
         <Image
-          source={require('../../assets/images/Logo.png')}
+          source={require('../../src/assets/images/Logo.png')}
           style={styles.logoStyle}
         />
       </View>
@@ -95,7 +109,7 @@ const SignIn = () => {
           </Text>
         </View>
         {errorMessageRef && (
-          <Text style={{color: 'red', marginVertical: 10}}>
+          <Text style={{ color: 'red', marginVertical: 10 }}>
             {errorMessageRef}
           </Text>
         )}
@@ -147,10 +161,10 @@ const SignIn = () => {
           </TouchableOpacity>
         </View>
         <TouchableOpacity
-          style={[styles.signInButton, (!phone || !password)  &&  styles.bgGray ]}
+          style={[styles.signInButton, (!phone || !password) && styles.bgGray]}
           onPress={loginHandleAuthentication}
           disabled={!phone || !password}
-          >
+        >
           <Text style={[styles.signInBtnText]}>Sign In</Text>
         </TouchableOpacity>
 
@@ -162,13 +176,13 @@ const SignIn = () => {
         <View style={[styles.socialMediaContainer]}>
           <TouchableOpacity onPress={onGoogleIconPress}>
             <Image
-              source={require('../../assets/images/GoogleIcon.png')}
+              source={require('../../src/assets/images/GoogleIcon.png')}
               style={[styles.IconStyles]}
             />
           </TouchableOpacity>
           <TouchableOpacity onPress={onAppleIconPress}>
             <Image
-              source={require('../../assets/images/AppleIcon.png')}
+              source={require('../../src/assets/images/AppleIcon.png')}
               style={[styles.IconStyles]}
             />
           </TouchableOpacity>
@@ -201,6 +215,7 @@ const styles = StyleSheet.create({
   LogoContainer: {
     alignItems: 'center',
   },
+  
   subContainer: {
     marginHorizontal: 24,
   },
@@ -281,10 +296,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 700,
   },
-  bgGray:{
-  backgroundColor:'#d3d3d3',
-  borderWidth:1,
-  borderColor:'#808080',
+  bgGray: {
+    backgroundColor: '#d3d3d3',
+    borderWidth: 1,
+    borderColor: '#808080',
   },
   termsContainer: {
     flexDirection: 'row',
